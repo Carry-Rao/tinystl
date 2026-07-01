@@ -1,0 +1,62 @@
+#pragma once
+
+namespace carryrao {
+namespace {
+template <typename T> struct remove_reference {
+    using type = T;
+};
+template <typename T> struct remove_reference<T &> {
+    using type = T;
+};
+template <typename T> struct remove_reference<T &&> {
+    using type = T;
+};
+
+template <typename T> struct is_lvalue_reference {
+    static constexpr bool value = false;
+};
+template <typename T> struct is_lvalue_reference<T &> {
+    static constexpr bool value = true;
+};
+
+template <typename T> struct raw_type {
+    using type = T;
+};
+template <typename T> using raw_type_t = typename raw_type<T>::type;
+template <typename T> struct raw_type<T &> {
+    using type = raw_type_t<T>;
+};
+template <typename T> struct raw_type<T &&> {
+    using type = raw_type_t<T>;
+};
+template <typename T> struct raw_type<T *> {
+    using type = raw_type_t<T>;
+};
+} // namespace
+
+template <typename T>
+using remove_reference_t = typename remove_reference<T>::type;
+
+template <typename T>
+constexpr bool is_lvalue_reference_v = is_lvalue_reference<T>::value;
+
+template <typename T> using raw_type_t = typename raw_type<T>::type;
+
+template <typename T> constexpr remove_reference_t<T> &&move(T &&t) noexcept {
+    return static_cast<remove_reference_t<T> &&>(t);
+}
+
+template <typename T> constexpr T &&forward(remove_reference_t<T> &t) noexcept {
+    return static_cast<T &&>(t);
+}
+template <typename T>
+constexpr T &&forward(remove_reference_t<T> const &t) noexcept {
+    return static_cast<T &&>(t);
+}
+template <typename T>
+constexpr T &&forward(remove_reference_t<T> &&t) noexcept {
+    static_assert(!is_lvalue_reference_v<T>,
+                  "Cannot forward an lvalue as an rvalue");
+    return static_cast<T &&>(t);
+}
+} // namespace carryrao
