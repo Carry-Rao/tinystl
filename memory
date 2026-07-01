@@ -1,0 +1,36 @@
+namespace carryrao {
+template <typename T> struct unique_ptr {
+  private:
+    T *data;
+
+  public:
+    unique_ptr() : data(new T()) {}
+    unique_ptr(T *ptr) : data(ptr) {}
+    unique_ptr(const unique_ptr &) = delete;
+    unique_ptr &operator=(const unique_ptr &) = delete;
+    unique_ptr(unique_ptr &&other) : data(other.data) { other.data = nullptr; }
+    unique_ptr &operator=(unique_ptr &&other) {
+        if (this != &other) {
+            delete data;
+            data = other.data;
+            other.data = nullptr;
+        }
+        return *this;
+    }
+    ~unique_ptr() { delete data; }
+};
+template <typename T> unique_ptr<T> make_unique() { return unique_ptr<T>; }
+
+template <typename T> struct shared_ptr {
+  private:
+    T *data;
+    struct control {
+        uint shared_count;
+        uint weak_count;
+    };
+    control *ctrl;
+
+  public:
+    
+};
+} // namespace carryrao
