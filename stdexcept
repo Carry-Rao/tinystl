@@ -1,0 +1,23 @@
+#pragma once
+
+namespace carryrao {
+struct exception {
+  private:
+    const char *err;
+
+  public:
+    exception(const char *e) : err(e) {}
+    const char *what() const { return err; }
+};
+
+struct logic_error : public exception {};
+struct invalid_argument : public exception {};
+struct domain_error : public exception {};
+struct length_error : public exception {};
+struct out_of_range : public exception {};
+struct runtime_error : public exception {};
+struct range_error : public exception {};
+struct overflow_error : public exception {};
+struct underflow_error : public exception {};
+
+} // namespace carryrao
