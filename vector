@@ -1,0 +1,128 @@
+#pragma once
+
+#include "stdexcept"
+#include "type"
+#include "utility"
+
+namespace carryrao {
+template <typename T> struct vector {
+  private:
+    T *_start = nullptr;
+    T *_now = nullptr;
+    size_t capacity = 0;
+    void destroy_elements() noexcept {
+        while (_now != _start) {
+            --_now;
+            _now->~T();
+        }
+    }
+    void expand() {
+        size_t new_cap = capacity == 0 ? 1 : capacity << 1;
+        expand(new_cap);
+    }
+    void expand(size_t target_cap) {
+        if (target_cap <= capacity)
+            return;
+        size_t cur_sz = size();
+        T *new_buf = new T[target_cap];
+        for (size_t i = 0; i < cur_sz; ++i)
+            new_buf[i] = move(_start[i]);
+        for (size_t i = 0; i < cur_sz; ++i)
+            _start[i].~T();
+        delete[] _start;
+        _start = new_buf;
+        _now = _start + cur_sz;
+        capacity = target_cap;
+    }
+
+  public:
+    vector() : capacity(1), _start(new T[1]), _now(_start) {}
+    explicit vector(size_t n)
+        : capacity(n), _start(new T[n]), _now(_start + n) {}
+    vector(const vector &other) {
+        capacity = other.capacity;
+        _start = new T[capacity];
+        size_t cur_sz = other.size();
+        _now = _start + cur_sz;
+        for (size_t i = 0; i < cur_sz; ++i)
+            _start[i] = other._start[i];
+    }
+    vector &operator=(const vector &other) {
+        if (this == &other)
+            return *this;
+        destroy_elements();
+        size_t cur_sz = other.size();
+        if (cur_sz > capacity)
+            expand(cur_sz);
+        _now = _start;
+        for (size_t i = 0; i < cur_sz; ++i)
+            push_back(other._start[i]);
+        return *this;
+    }
+    vector(vector &&other) noexcept {
+        capacity = other.capacity;
+        _start = other._start;
+        _now = other._now;
+        other.capacity = 0;
+        other._start = nullptr;
+        other._now = nullptr;
+    }
+    vector &operator=(vector &&other) noexcept {
+        if (this == &other)
+            return *this;
+        destroy_elements();
+        delete[] _start;
+        capacity = other.capacity;
+        _start = other._start;
+        _now = other._now;
+        other.capacity = 0;
+        other._start = nullptr;
+        other._now = nullptr;
+        return *this;
+    }
+    ~vector() {
+        destroy_elements();
+        delete[] _start;
+    }
+    T &operator[](size_t index) {
+        if (index >= size())
+            throw out_of_range("Index out of bounds");
+        return _start[index];
+    }
+    const T &operator[](size_t index) const {
+        if (index >= size())
+            throw out_of_range("Index out of bounds");
+        return _start[index];
+    }
+    T *start() { return _start; }
+    const T *start() const { return _start; }
+    T *end() { return _now; }
+    const T *end() const { return _now; }
+    void push_back(const T &value) {
+        if (_now == _start + capacity)
+            expand();
+        *_now = value;
+        ++_now;
+    }
+    void push_back(T &&value) {
+        if (_now == _start + capacity)
+            expand();
+        *_now = move(value);
+        ++_now;
+    }
+    void pop_back() {
+        if (empty())
+            throw out_of_range("Vector is empty");
+        --_now;
+        _now->~T();
+    }
+    void clear() noexcept { destroy_elements(); }
+    bool empty() const noexcept { return _now == _start; }
+    void reserve(size_t n) {
+        if (n > capacity)
+            expand(n);
+    }
+    size_t size() const noexcept { return static_cast<size_t>(_now - _start); }
+    size_t cap() const noexcept { return capacity; }
+};
+} // namespace carryrao
