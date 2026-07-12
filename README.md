@@ -1,10 +1,10 @@
 # TinySTL
 ---
-一个简易的 C++ 标准模板库（STL）实现
-本文档同时提供[**Typst**](./README.typ)版本
+A simple C standard template library (STL) implementation
+This document also comes in a[**Typst**](./README_en.typ)version
 [中文简体](./README.md) | [English](./README_en.md)
 
-## 安装
+## Install
 ```bash
 git clone https://github.com/Carry-Rao/tinystl.git
 cd tinystl
@@ -13,5 +13,5 @@ cmake ..
 make
 ```
 
-- 或直接将头文件引入你的项目
+- Or just include the header file directly in your project
 - include "tinystl/vector.h"

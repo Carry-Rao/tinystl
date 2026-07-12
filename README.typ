@@ -1,6 +1,6 @@
 = TinySTL
 #line(length: 100%)
-一个简易的 C++ 标准模板库（STL）实现
+A simple C standard template library (STL) implementation
 
 #set text(font: ("Source Han Serif SC"))
 
@@ -8,7 +8,7 @@
 |
 #link("example_en")[*ENGLISH*]
 
-== 安装
+== Install
 ```bash
 git clone https://github.com/Carry-Rao/tinystl.git
 cd tinystl
@@ -16,5 +16,6 @@ mkdir build && cd build
 cmake ..
 make
 ```
-- 或直接将头文件引入你的项目
+
+- Or just include the header file directly in your project
 - include "tinystl/vector.h"
