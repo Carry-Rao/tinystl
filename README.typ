@@ -1,12 +1,13 @@
 = TinySTL
 #line(length: 100%)
+
 一个简易的 C++ 标准模板库（STL）实现
 
 #set text(font: ("Source Han Serif SC"))
 
-#link("example")[*中文简体*]
+#link("https://github.com/Carry-Rao/tinystl/blob/master/README.typ")[*中文简体*]
 |
-#link("example_en")[*ENGLISH*]
+#link("https://github.com/Carry-Rao/tinystl/blob/master/README_en.typ")[*ENGLISH*]
 
 == 安装
 ```bash

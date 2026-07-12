@@ -1,7 +1,9 @@
 # TinySTL
 ---
 一个简易的 C++ 标准模板库（STL）实现
+
 本文档同时提供[**Typst**](./README.typ)版本
+
 [中文简体](./README.md) | [English](./README_en.md)
 
 ## 安装
